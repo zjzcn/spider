@@ -18,21 +18,48 @@ public class ProxyIpChecker {
 
     private static Logger log = LoggerFactory.getLogger(ProxyIpChecker.class);
 
+    private static String reqUrl = "http://www.baidu.com";
+
     public static Boolean checkProxyIp(String proxyIp, int proxyPort) {
-        String reqUrl = "http://www.baidu.com";
         return checkProxyIp(proxyIp, proxyPort, reqUrl);
+    }
+
+    public static Boolean checkNetwork() {
+        return checkNetwork(reqUrl);
+    }
+
+    /**
+     * 网络有效检测
+     *
+     * @param reqUrl
+     */
+    public static boolean checkNetwork(String reqUrl) {
+        HttpClient client = HttpClients.custom()
+                .build();
+
+        return checkUrl(client, reqUrl);
     }
 
     /**
      * 代理IP有效检测
      *
-     * @param proxyIp
-     * @param proxyPort
      * @param reqUrl
      */
-    public static boolean checkProxyIp(String proxyIp, int proxyPort, String reqUrl) {
-        HttpClient client = getClient(proxyIp, proxyPort);
+    public static boolean checkProxyIp(String proxyIp, Integer proxyPort, String reqUrl) {
+        HttpClient client = HttpClients.custom()
+                .setProxy(new HttpHost(proxyIp, proxyPort))
+                .build();
 
+        return checkUrl(client, reqUrl);
+    }
+
+    /**
+     * 代理IP有效检测
+     *
+     * @param client
+     * @param reqUrl
+     */
+    public static boolean checkUrl(HttpClient client, String reqUrl) {
         HttpGet httpGet = new HttpGet(reqUrl);
         httpGet.setConfig(RequestConfig.custom()
                 .setSocketTimeout(3000)
@@ -58,15 +85,6 @@ public class ProxyIpChecker {
             }
         }
         return false;
-    }
-
-
-    private static HttpClient getClient(String proxyIp, Integer proxyPort){
-        HttpClient client = HttpClients.custom()
-                .setProxy(new HttpHost(proxyIp, proxyPort))
-                .build();
-
-        return client;
     }
 
     public static void main(String[] args) {
