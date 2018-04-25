@@ -8,8 +8,6 @@ import com.github.zjzcn.spider.jd.comments.util.DoneProduct;
 import com.github.zjzcn.spider.jd.comments.util.UrlEnum;
 import com.github.zjzcn.spider.jd.comments.util.UrlUtil;
 import com.github.zjzcn.util.HttpUserAgent;
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -22,8 +20,6 @@ import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Html;
 import us.codecraft.webmagic.selector.Json;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,23 +44,13 @@ public class JDCommentsCrawl implements PageProcessor {
                 .setSleepTime(1000)
                 .setUserAgent(HttpUserAgent.get());
 
-        // 加载代理IP文件
-        String basepath = System.getProperty("user.dir");
-        String resultpath = basepath + "/data/webmagic/proxyip.txt";
-
-        List<String[]> proxyPool = new ArrayList<String[]>();
-        try {
-            List<String> proxyIps = Files.readLines(new File(resultpath), Charsets.UTF_8);
-            if(proxyIps != null && proxyIps.size() > 0){
-                for (String proxy : proxyIps) {
-//                    proxyPool.add(proxy.split(ProxyIpPool.SPLIT));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // site.setHttpProxyPool(proxyPool, true);
+//        // 加载代理IP文件
+//        String basepath = System.getProperty("user.dir");
+//        String resultpath = basepath + "/data/webmagic/proxyip.txt";
+//
+//        List<String[]> proxyPool = new ArrayList<String[]>();
+//
+//        // site.setHttpProxyPool(proxyPool, true);
         return site;
     }
 

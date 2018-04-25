@@ -1,6 +1,14 @@
 package com.github.zjzcn.spider.proxyip;
 
-public class ProxyIp {
+import com.github.zjzcn.util.DateUtil;
+
+import java.util.Date;
+import java.util.concurrent.Delayed;
+import java.util.concurrent.TimeUnit;
+
+public class ProxyIp implements Delayed {
+
+    private static final long DELAY_MS = 10 * 60 * 1000; // 10minus
 
     private static final String SPLIT = ":";
 
@@ -19,12 +27,12 @@ public class ProxyIp {
         String[] split = id.split(SPLIT);
         this.ip = split[0];
         this.port = Integer.valueOf(split[1]);
+        this.createTime = DateUtil.format(new Date());
+        this.setLastCheckTime(this.getCreateTime());
     }
 
     public ProxyIp(String ip, Integer port) {
-        this.id = ip + SPLIT + port;
-        this.ip = ip;
-        this.port = port;
+        this(ip + SPLIT + port);
     }
 
     public String getId() {
@@ -87,5 +95,21 @@ public class ProxyIp {
         value += 37 * value + ip.hashCode();
         value += 37 * value + port.hashCode();
         return (int) (value ^ (value >>> 32));
+    }
+
+    @Override
+    public long getDelay(TimeUnit unit) {
+        Date checkTime = DateUtil.parse(lastCheckTime);
+        long delayMs = checkTime.getTime() + DELAY_MS - System.currentTimeMillis();
+        return unit.convert(delayMs, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public int compareTo(Delayed o) {
+        if (o == this) {
+            return 0;
+        }
+        long d = (getDelay(TimeUnit.NANOSECONDS) - o.getDelay(TimeUnit.NANOSECONDS));
+        return (d == 0) ? 0 : ((d < 0) ? -1 : 1);
     }
 }

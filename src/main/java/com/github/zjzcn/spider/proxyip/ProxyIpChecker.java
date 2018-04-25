@@ -73,7 +73,7 @@ public class ProxyIpChecker {
         String url = "http://www.baidu.com";
 
         Map<String, Integer> uncertainMap = new HashMap<>();
-        uncertainMap.put("125.93.148.51", 9000);
+        uncertainMap.put("117.90.7.156", 9000);
 
         for (String proxyIp : uncertainMap.keySet()){
             System.out.println(checkProxyIp(proxyIp, uncertainMap.get(proxyIp), url));

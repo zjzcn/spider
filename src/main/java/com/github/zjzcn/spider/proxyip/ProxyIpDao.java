@@ -82,7 +82,7 @@ public class ProxyIpDao {
 
         Connection connection = openConnection();
         try {
-            runner.update(connection, sql, id, lastCheckTime);
+            runner.update(connection, sql, lastCheckTime, id);
         } catch (SQLException e) {
             logger.error("update proxy_ip table error.", e);
         } finally {
