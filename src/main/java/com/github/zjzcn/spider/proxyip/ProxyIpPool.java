@@ -119,8 +119,10 @@ public class ProxyIpPool {
                 Boolean isNetworkOk = ProxyIpChecker.checkNetwork();
                 if (isNetworkOk) {
                     livingIpPool.remove(proxyIp);
-                    proxyIpDao.delete(proxyIp.getId());
-                    logger.info("ProxyIpPoolCleaner delete proxy ip={}.", proxyIp);
+                    int rows = proxyIpDao.delete(proxyIp.getId());
+                    if (rows > 0) {
+                        logger.info("ProxyIpPoolCleaner delete proxy ip={}.", proxyIp);
+                    }
                 } else {
                     delayQueue.add(proxyIp);
                 }

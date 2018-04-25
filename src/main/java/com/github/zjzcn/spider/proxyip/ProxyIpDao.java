@@ -90,17 +90,18 @@ public class ProxyIpDao {
         }
     }
 
-    public void delete(String id) {
+    public int delete(String id) {
         String sql = " delete from proxy_ip WHERE id =?";
 
         Connection connection = openConnection();
         try {
-            runner.update(connection, sql, id);
+            return runner.update(connection, sql, id);
         } catch (SQLException e) {
             logger.error("Delete proxy_ip data error， id={}.", id, e);
         } finally {
             closeConnection(connection);
         }
+        return 0;
     }
 
     public ProxyIp queryOne(String id) {
